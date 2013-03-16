@@ -1,0 +1,40 @@
+<% content_for :title, "Proconfie" %>
+
+<% content_for :head do %>
+  <%= stylesheet_link_tag 'main' %>
+  <%= javascript_include_tag 'main' %>
+<% end %>
+
+<% content_for :flag do %>
+ <%= select_current_estado %>
+<% end %>
+
+<!-- Search box -->
+
+<div class="row">
+  <div class="radius panel">
+    <div class="row collapse">
+      <div class="twelve mobile-four columns">
+        <input type="text" id="search" placeholder="Digite o nome da empresa, ou categoria" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End Search box -->
+
+<div class="row">
+  <div class="one column"></div>
+  <div class="ten mobile-four columns">
+    <blockquote>
+      <p><strong>Proconfie</strong> utiliza as reclamações feitas no PROCON para avaliar empresas. O objetivo do <strong>Proconfie</strong> é ser um dos critérios de decisão na realização da sua próxima compra. <strong>Valorize</strong> empresas que <strong>valorizam</strong> você!
+      <cite>A equipe Proconfie</cite></p>
+    </blockquote>
+    <h5 class="subheader"></h5>
+  </div>
+  <div class="one column"></div>
+</div>
+
+<% content_for :w3c do %>
+  <%= link_to image_tag("w3c-html5.png"), "http://validator.w3.org/check?uri=http%3A%2F%2Fproconfie.vod.dcc.ufmg.br%2F&charset=%28detect+automatically%29&doctype=Inline&group=0&user-agent=W3C_Validator%2F1.3", :target => "_blank" %>
+<% end %>

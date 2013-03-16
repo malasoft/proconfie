@@ -1,0 +1,144 @@
+<% content_for :title, "Proconfie - #{@empresa.nome}" %>
+
+<% content_for :head do %>
+
+  <%= stylesheet_link_tag 'empresas' %>
+  
+  <script type="text/javascript">
+    function plotDonut(elemento, dados) {
+      Morris.Donut({
+        element: elemento,
+        data: dados,
+        colors: ["#0b62a4", "#c60f13"],
+        formatter: function (x) { return x + '%' } // 100 => 100%
+      });
+    }
+    
+    function plotLine(elemento, dados) {
+      Morris.Line({
+        element: elemento,
+        data: dados,
+        xkey: 'time',
+        ykeys: ['value'],
+        labels: ['Percentual']
+      });
+    }
+    
+    function plotLineReclamacoes(elemento, dados) {
+      Morris.Line({
+        element: elemento,
+        data: dados,
+        xkey: 'time',
+        ykeys: ['value'],
+        labels: ['Número de reclamações']
+      });
+    }
+    
+    function plotLineProporcional(elemento, dados) {
+      Morris.Line({
+        element: elemento,
+        data: dados,
+        xkey: 'time',
+        ykeys: ['value'],
+        labels: ['Valor']
+      });
+    }
+    
+    function plotBar(elemento, dados) {
+      Morris.Bar({
+        element: elemento,
+        data: dados,
+        xkey: 'problem',
+        ykeys: ['frequency'],
+        labels: ['Frequência']
+      });
+    }
+    
+    $(document).ready(function() {
+      dados = <%= @percentual_reclamacoes_resolvidas.html_safe %>
+      plotDonut("percentual_reclamacoes_resolvidas", dados);
+      
+      dados = <%= @reclamacoes.html_safe %>
+      plotLineReclamacoes("reclamacoes", dados);
+      
+      dados = <%= @percentual_reclamacoes_categoria.html_safe %>
+      plotLine("percentual_reclamacoes_categoria", dados);
+      
+      dados = <%= @proporcional_reclamacoes_resolvidas.html_safe %>
+      plotLineProporcional("proporcional_reclamacoes_resolvidas", dados);
+      
+      dados = <%= @problemas.html_safe %>
+      plotBar("problemas", dados);
+      
+      // Setting it directly using CSS (empresas.css) is hanging the browser!
+      $('#graficos').css({'display':'none'});
+      
+    });
+    
+  </script>
+<% end %>
+
+<div class="row">
+  <div class="twelve mobile-four columns">
+    <h2><%= @empresa.nome %></h2>
+  </div>
+  <hr />
+</div>
+
+<div class="row">
+  <div class="six mobile-four columns">
+    <div class="panel">
+      <h4 class="<%= risco(@empresa.score) %> has-tip tip-top" title="O risco da empresa é calculado é um valor entre 1 e 10 e é calculado a partir de 3 fatores:<br />(1) a proporção de reclamações que recebe dentro da sua categoria<br />(2) a proporção de reclamações resolvidas<br />(3) a tendência para receber mais ou menos reclamações ao longo do tempo">Risco: <%= risco_header(@empresa.score) %> (<%= @empresa.score.to_i %>)</h4>
+      <h5 class="subheader">A <%= ranking(@empresa) %> <strong>pior</strong> no ramo, de um total de <%= @empresas_with_same_category.size %> empresas registradas</h5>
+      <hr/>
+      <ul class="circle">
+        <li>Empresa do ramo de <%= link_to "#{@empresa.categoria.descricao}", categoria_path(@empresa.categoria) %></li>
+        <li>A primeira reclamação registrado contra ela foi em <%= l(@empresa.data_primeira_reclamacao, :format => "%d/%m/%Y") %></li>
+        <li><%= link_to_function "Saiba mais", "$('#graficos').toggle()" %> detalhes sobre esta empresa vendo gráficos.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="six mobile-four columns">
+    <div id="percentual_reclamacoes_resolvidas"></div>
+    <div class="panel">
+      <p>As reclamações não resolvidas contribuem para aumentar o risco de fazer negócios com uma determinada empresa. Ou seja, quanto maior a percentagem de reclamações não resolvidas contra uma empresa, maior também pode ser o risco de fazer negócios com ela.</p>
+    </div>
+  </div>  
+</div>
+
+<div id="graficos">
+
+  <div class="row">
+    <div class="six mobile-four columns">
+      <div id="reclamacoes"></div>
+      <div class="panel">
+        <p>Esse gráfico mostra o número de reclamações obtidas por uma empresa ao longo dos anos. Um elevado número de reclamações não necessariamente significa que a empresa possui “alto risco”, ou seja, maior chance de gerar reclamações por usuários. Essa é uma informação importante na avaliação de empresas, mas para avaliar o risco de uma empresa com maior justiça é preciso considerar também outras informações, como as mostradas nos outros gráficos desta página.</p>
+      </div>
+    </div>
+  
+    <div class="six mobile-four columns">
+      <div id="percentual_reclamacoes_categoria"></div>
+      <div class="panel">
+        <p>Esse gráfico mostra a percentagem do número de reclamações de uma empresa em relação a todas as reclamações da sua categoria. Essa informação é interessante, pois possibilita avaliar, de forma geral, o desempenho de uma determinada empresa em determinada categoria.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+  
+    <div class="six mobile-four columns">
+      <div id="proporcional_reclamacoes_resolvidas"></div>
+      <div class="panel">
+        <p>Esse gráfico mostra a percentagem de reclamações resolvidas ao longo dos anos. O crescimento desse valor ao longo do tempo indica que a empresa está apresentando bom desempenho na resolução de problemas. Observe que esse valor percentual não é necessariamente proporcional ao número de reclamações. Isso significa que uma empresa pode apresentar um número de reclamações menor ao longo dos anos, mas diminuir o número de reclamações resolvidas. Essa é uma informação fundamental na criação do ranking de piores empresas em uma determinada categoria.</p>
+      </div>
+    </div>
+    
+    <div class="six mobile-four columns">
+      <div id="problemas"></div>
+      <div class="panel">
+        <p>Esse gráfico mostra os cinco tipos de problemas mais comuns para uma determinada empresa, possibilitando uma visão geral dos mesmos. Essa informação também pode ser útil no processo de decisão de escolha de uma determinada empresa. Por exemplo, sendo considerada como um critério de desempate.</p>
+      </div>
+    </div>
+    
+  </div>
+</div>

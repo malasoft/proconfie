@@ -1,0 +1,59 @@
+<div id='regiao'></div>
+<div id='regiao_ano'></div>
+<div id='reclamacoes'></div>
+<script type="text/javascript">
+  
+    function plotDonut(elemento, dados) {
+    Morris.Donut({
+      element: elemento,
+      data: dados
+    });
+  }
+  
+  function plotByRegiao(dados) {
+    plotDonut('regiao', dados);
+  }
+  
+  function plotLinesRegiaoAno(elemento, dados) {
+    Morris.Line({
+      element: elemento,
+      data: dados,
+      xkey: 'ano',
+      ykeys: ['Norte', 'Nordeste', 'Sul', 'Sudeste', 'Centro-Oeste'],
+      labels: ['Norte', 'Nordeste', 'Sul', 'Sudeste', 'Centro-Oeste'],
+      xLabels: "year"
+    });
+  }
+  
+  function plotByRegiaoAno(dados) {
+    plotLinesRegiaoAno('regiao_ano', dados);
+  }
+  
+  function plotBar(elemento, dados) {
+    Morris.Bar({
+      element: elemento,
+      data: dados,
+      xkey: 'label',
+      ykeys: ['value'],
+      labels: ['Reclamacoes']
+    });
+  }
+  
+  function plotByReclamacoes(dados) {
+    plotBar('reclamacoes', dados);
+  }
+  
+  $(function() {
+    reclamacoes = <%#= @by_reclamacoes.html_safe %>
+    plotByReclamacoes(reclamacoes);
+  
+    regiao = <%#= @by_regiao.html_safe %>
+    plotByRegiao(regiao);
+  
+    regiao_ano = <%#= @by_regioes_ano.html_safe %>
+    plotByRegiaoAno(regiao_ano);
+  });
+  
+</script>
+
+<%= select_current_estado sigla_session.sigla %>

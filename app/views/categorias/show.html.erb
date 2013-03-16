@@ -1,0 +1,26 @@
+<% content_for :title, "Proconfie - #{@categoria.descricao}" %>
+
+<% content_for :head do %>
+  <%= stylesheet_link_tag 'categorias' %>
+<% end %>
+
+<div class="row">
+  <div class="ten columns">
+    <h2><%= @categoria.descricao %></h2>
+  </div>
+  <div class="two columns">
+    <h2>Risco</h2>
+  </div>
+  <hr />
+</div>
+<div class="row">
+  <% @empresas.each do |empresa| %>
+    <div class="ten columns">
+      <h4><%= link_to "#{empresa.nome}", empresa_path(empresa) %></h4>
+    </div>
+    <div class="two columns">
+      <h4 class="<%= risco(empresa.score) %> has-tip tip-right" title="<%= empresa.score.to_i %>"><%= risco_header(empresa.score) %></h4>
+    </div>
+    </hr />
+  <% end %>
+</div>
