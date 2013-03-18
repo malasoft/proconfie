@@ -5,3 +5,5 @@ Proconfie utiliza as reclamações feitas no PROCON para avaliar empresas. O obj
 - A equipe Proconfie
 
 Acesse: http://proconfie.vod.dcc.ufmg.br/
+
+Documentação: http://github.com/malasoft/proconfie/blob/master/docProconfie.pdf?raw=true
